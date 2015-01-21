@@ -1,0 +1,24 @@
+<#import "../layout/defaultLayout.ftl.html" as layout>
+    <@layout.myLayout "Register page">
+
+    <form action="/GameRegister" method="post">
+    <fieldset>
+        <div class="jumbotron">
+            <h1><span class="label label-default">Registration Information</span></h1>
+
+        </div>
+        <label>Username</label>
+        <input type="text" name="UserName" value="">
+        <br>
+
+        <label>Password</label>
+        <input type="text" id="password" name="Password" value=""> <label id="Dit"></label>
+        <span id="result"></span>
+        <br><br>
+        <input type="submit" value="Register"></fieldset>
+
+
+    <div class="alert alert-danger" role="alert">${Name}</div>
+
+</form>
+</@layout.myLayout>
