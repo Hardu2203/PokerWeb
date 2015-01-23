@@ -21,6 +21,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import controllers.ApplicationController;
 import controllers.AuthenticationControler;
+import controllers.DBcontroller;
 import services.PokerService;
 import services.iPokerService;
 
@@ -34,6 +35,7 @@ public class Module extends AbstractModule {
         bind(iPokerService.class).to(PokerService.class);
        // bind(javax.persistence.EntityManager).to(ApplicationController.class);
         bind(AuthenticationControler.class);
+        bind(DBcontroller.class);
 
 
     }

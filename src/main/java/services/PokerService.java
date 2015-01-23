@@ -16,7 +16,7 @@ public class PokerService implements iPokerService {
 
 
 
-    List<Card> ListofCards;
+   public List<Card> ListofCards;
 
 
     public void GenerateDeck() {
@@ -38,13 +38,14 @@ public class PokerService implements iPokerService {
 
     }
 
-    public Hand deal()
+    public String deal()
     {
         List<Card> FiveCards = new ArrayList<>();
 
         for (int i =0; i< 5;i++)
         {
             FiveCards.add(ListofCards.get(i));
+            ListofCards.remove(i);
         }
 
         String a = FiveCards.get(0).toString();
@@ -54,8 +55,10 @@ public class PokerService implements iPokerService {
         String e = FiveCards.get(4).toString();
 
         Hand hand = new Hand(a,b,c,d,e);
+        String ant = CalculateHandStrength(hand);
+        ant = hand.toString() + "," + ant;
 
-        return  hand;
+        return  ant;
 
 
 
@@ -104,11 +107,12 @@ public class PokerService implements iPokerService {
     public String getname()
     {
 
-        GenerateDeck();
+       // GenerateDeck();
         shuffle();
-        String Eval = CalculateHandStrength(deal());
 
-        return deal().toString() + ", " + Eval;
+
+
+        return deal().toString();
     }
 
 

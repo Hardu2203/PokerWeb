@@ -18,6 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import User.Game;
 
 /**
  * Created by harduNel on 2015-01-16.
@@ -151,9 +152,9 @@ public class AuthenticationControler {
 
 
     @Transactional
-    public void postIndex(User use) {
+      public void postIndex(User use) {
 
-         //logger.info("In postRoute");
+        //logger.info("In postRoute");
 
         EntityManager entityManager = entityManagerProvider.get();
 
@@ -165,5 +166,25 @@ public class AuthenticationControler {
         // return Results.redirect(router.getReverseRoute(ApplicationController.class, "getIndex"));
 
     }
+
+    @Transactional
+    public void postIndexGame(Game use)
+    {
+
+        //logger.info("In postRoute");
+
+        EntityManager entityManager = entityManagerProvider.get();
+
+        entityManager.persist(use);
+
+
+
+
+        // return Results.redirect(router.getReverseRoute(ApplicationController.class, "getIndex"));
+
+    }
+
+
+
 
 }

@@ -5,4 +5,5 @@ package services;
  */
 public interface iPokerService {
     String getname();
+    void GenerateDeck();
 }

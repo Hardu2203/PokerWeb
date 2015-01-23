@@ -1,9 +1,8 @@
 package User;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by harduNel on 2015-01-20.
@@ -11,11 +10,32 @@ import javax.persistence.Id;
 
 @Entity
 public class User {
-@Id
+
 //@GeneratedValue(strategy= GenerationType.AUTO)
 //Long userid;
+   // @Column(name = "username", nullable = false)
+    @Id
     private String username;
+
     private String password;
+
+    @OneToMany(mappedBy = "u")
+    private List<UserGame> games = new ArrayList<>();
+
+    public void Gameadd(Game _game)
+    {
+        UserGame usergame = new UserGame();
+        usergame.setUsername(this.getUsername());
+        games.add(usergame);
+    }
+   // @Version
+   // @OneToMany(mappedBy="User",targetEntity=UserGame.class,
+   //         fetch=FetchType.EAGER)
+   // private List<UserGame> games;
+  // @ManyToMany(mappedBy="users")
+  // private List<Game> games;
+
+
 
     public User() {}
 
