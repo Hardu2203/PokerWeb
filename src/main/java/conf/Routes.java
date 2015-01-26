@@ -28,8 +28,10 @@ public class Routes implements ApplicationRoutes {
     public void init(Router router) {  
         
         router.GET().route("/Game").with(ApplicationController.class, "index");router.POST().route("/Game").with(ApplicationController.class, "index");
+        router.GET().route("/GameLobby").with(ApplicationController.class, "GameLobby");router.POST().route("/GameLobby").with(ApplicationController.class, "GameLobby");
         router.GET().route("/Multiplayer").with(ApplicationController.class, "MultiPlayer");router.POST().route("/Multiplayer").with(ApplicationController.class, "MultiPlayer");
         router.GET().route("/SelectPlayers").with(ApplicationController.class, "SelectPlayers");router.POST().route("/SelectPlayers").with(ApplicationController.class, "SelectPlayers");
+        router.GET().route("/History").with(ApplicationController.class, "History");router.POST().route("/History").with(ApplicationController.class, "History");
         router.GET().route("/Register").with(ApplicationController.class, "Register");router.POST().route("/Register").with(ApplicationController.class, "Register");
         router.GET().route("/Logout").with(ApplicationController.class, "Logout");router.POST().route("/Logout").with(ApplicationController.class, "Logout");
         router.GET().route("/GameRegister").with(ApplicationController.class, "indexRegister");router.POST().route("/GameRegister").with(ApplicationController.class, "indexRegister");

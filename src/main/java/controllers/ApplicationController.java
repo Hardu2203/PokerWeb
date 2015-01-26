@@ -201,11 +201,13 @@ public class ApplicationController {
         User us = new User();
         us.setUsername("hard");
         us.setPassword("qq");
-        auth.postIndex(us);
+      //  auth.postIndex(us);
 
         UserGame UG = new UserGame();
         UG.setUsername("hard");
         UG.setWinner(true);
+        UG.setHand(part1 +" " + part2 +" "+ part3+" "+ part4+" "+ part5);
+
         UG.setgameid(1);
 
 
@@ -217,8 +219,8 @@ public class ApplicationController {
 
 
 
-        postIndexGame(g);
-        postIndexUserGame(UG);
+      //  postIndexGame(g);
+      //  postIndexUserGame(UG);
 
 
 
@@ -241,6 +243,8 @@ public class ApplicationController {
 
 
     }
+
+
     @Inject
     Provider<EntityManager> entityManagerProvider;
     @Transactional
@@ -319,6 +323,8 @@ public class ApplicationController {
             result.render("card4", part3 );
             result.render("card5", part4 );
 
+            result.render("Strong", part5);
+
 
                 return result;
       //      }
@@ -330,9 +336,10 @@ public class ApplicationController {
 
 
         if (auth.LoginTheUser(Username,Password)) {
-            result.render("Name", pokerService.getname());
+//
             Ses.put("username", Username);
-
+            pok.GenerateDeck();
+            result.render("Name", pokerService.getname());
             String Name = pokerService.getname();
             String[] parts = Name.split(",");
             String part1 = parts[1];
@@ -350,6 +357,8 @@ public class ApplicationController {
             result.render("card3", part2 );
             result.render("card4", part3 );
             result.render("card5", part4 );
+
+            result.render("Strong", part5);
 
 
             return  result;
@@ -447,11 +456,71 @@ public class ApplicationController {
 
     
     public Result helloWorldJson() {
-        
+
         SimplePojo simplePojo = new SimplePojo();
         simplePojo.content = "Hello World! Hello Json!";
 
         return Results.json().render(simplePojo);
+
+    }
+
+    public Result History() {
+
+        Result result = Results.html();
+
+
+        List<UserGame> UserGameL = db.getHistory();
+
+        if (UserGameL.size()>0) {
+            result.render("GAMEID1", UserGameL.get(0).getgameid());
+            result.render("UserName1", UserGameL.get(0).getUsername());
+            result.render("Hand1", UserGameL.get(0).getHand());
+        }
+        else {result.render("GAMEID1", "");
+            result.render("UserName1", "");
+            result.render("Hand1", "");}
+
+        if(UserGameL.size()>1) {
+            result.render("GAMEID2", UserGameL.get(1).getgameid());
+            result.render("UserName2", UserGameL.get(1).getUsername());
+            result.render("Hand2", UserGameL.get(1).getHand());
+        }
+        else { result.render("GAMEID2", "");
+            result.render("UserName2", "");
+            result.render("Hand2", "");}
+
+        if(UserGameL.size()>2) {
+            result.render("GAMEID3", UserGameL.get(2).getgameid());
+            result.render("UserName3", UserGameL.get(2).getUsername());
+            result.render("Hand3", UserGameL.get(2).getHand());
+        }
+        else {
+            result.render("GAMEID3", "");
+            result.render("UserName3","");
+            result.render("Hand3", "");
+        }
+        if(UserGameL.size()>3) {
+            result.render("GAMEID4", UserGameL.get(4).getgameid());
+            result.render("UserName4", UserGameL.get(4).getUsername());
+            result.render("Hand4", UserGameL.get(4).getHand());
+        }
+        else {result.render("GAMEID4", "");
+            result.render("UserName4", "");
+            result.render("Hand4", "");}
+        if(UserGameL.size()>4) {
+            result.render("GAMEID5", UserGameL.get(5).getgameid());
+            result.render("UserName5", UserGameL.get(5).getUsername());
+            result.render("Hand5", UserGameL.get(5).getHand());
+
+        }
+        else {result.render("GAMEID5", "");
+            result.render("UserName5","");
+            result.render("Hand5", "");}
+
+
+
+
+        return result;
 
     }
 
@@ -560,11 +629,64 @@ public class ApplicationController {
     }
     public Result SelectPlayers(Context Con)
     {
+        Session s = Con.getSession();
+
+        String SesUsername = s.get("username");
         Result result = Results.html();
+
         String User1 = Con.getParameter("UserSelect");
+        List<Game> GameList = db.getCreated();
+
+        String html ="";
+        html += "<h2> Available Games </h2> <table>";
+
+        for(Game g : GameList)
+        {
+            if(g.getHostName().compareTo(SesUsername) != 0)
+            {
+
+                html += "<tr><td><a href='/GameLobby";
+                html += g.getGamename();
+                html+= "/";
+                html += SesUsername;
+                html += "'>join game</a></td></td>";
+                html += g.getGamename();
+                html += "</td></td>";
+
+
+            }
+        }
+
+        html += "</table>";
+
+        result.render("games",html);
+
+
         return  result;
 
 
+
+    }
+
+    public Result GameLobby(Context Con)
+    {
+        Session s = Con.getSession();
+
+        String SesUsername = s.get("username");
+
+
+        Result result = Results.html();
+        String GameName = Con.getParameter("GameName");
+        Game g = new Game();
+        g.setgamename("GameName");
+        g.setTimestamp(new Date());
+        g.SetHostName(SesUsername);
+        g.SetStatus("Created");
+        postIndexGame(g);
+
+
+
+        return result;
     }
     
     public static class SimplePojo {
