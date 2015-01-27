@@ -671,11 +671,13 @@ public class ApplicationController {
     Map<String, List <String>> m1 = new HashMap();
     String html;
     boolean changed = false;
+    String GAMENAME;
 
 
     public Result JoinGameLobby(@PathParam("gamename") String GameName,Context Con)
     {
-        boolean changed = true;
+        GAMENAME = GameName;
+         changed = true;
         Session s = Con.getSession();
         String SesUsername = s.get("username");
 
@@ -726,6 +728,7 @@ public class ApplicationController {
 
         Result result = Results.html();
         String GameName = Con.getParameter("GameName");
+       String GameName2 = Con.getSession().get("GameName");
 
         if (changed ==false) {
             Game g = new Game();
@@ -757,11 +760,58 @@ public class ApplicationController {
 
 
         }
+        if (GAMENAME!=null) {
+
+            //Check if this user is host
+            if (db.IsHostOfGame(GAMENAME, SesUsername)) {
+                String html2 = " <form action=" + "/MultiplayerPLAY/" +GAMENAME+ " method=" + "get" + ">" +
+                        "<input type=" + "submit" + " " + "value=" + "Start Game" + "></fieldset>" +
+                        "</form>";
+                result.render("button", html2);
+            } else {
+                result.render("button", "");
+            }
+        }
+        else {
+            if (GameName != null) {
+                if (db.IsHostOfGame(GameName, SesUsername)) {
+                    String html2 = " <form action=" + "/MultiplayerPLAY/" +GameName+ " method=" + "get" + ">" +
+                            "<input type=" + "submit" + " " + "value=" + "Start Game" + "></fieldset>" +
+                            "</form>";
+                    result.render("button", html2);
+                } else {
+                    result.render("button", "");
+                }
+            }
+        }
         result.render("Members",html);
 
 
 
         return result;
+    }
+
+    public Result MultiplayerPLAY(@PathParam("gamename") String GameName, Context Con)
+    {
+        Game UpdateGame = db.GetGameForUpdate(GameName);
+        UpdateGame.SetStatus("Started");
+        db.UpdateGame(UpdateGame);
+
+
+        List<String> Players = m1.get(GameName);
+        String html = "";
+        html += "<h1>The Game: " + GameName + "</h1>";
+        pok.GenerateDeck();
+        for(String PlayerName : Players)
+        {
+            html += "<h3>" + PlayerName + " " +pokerService.getname() +"<h3>";
+
+
+        }
+        Result result = Results.html();
+
+        result.render("PlayGame",html);
+        return  result;
     }
     
     public static class SimplePojo {
