@@ -1,0 +1,66 @@
+<#import "../layout/defaultLayout.ftl.html" as layout>
+    <@layout.myLayout "Home page">
+
+    <ul class="nav nav-tabs">
+        <li class="nav nav-tabs"><a href="/Game">Single Player</a></li>
+        <li><a href="/Multiplayer">Multi-Player</a></li>
+        <li><a href="/History">History</a></li>
+    </ul>
+
+
+    <div class="panel panel-default">
+
+
+    <table id="example" class="table table-bordered" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th>GAMEID</th>
+            <th>USERGAME</th>
+            <th>HAND</th>
+
+        </tr>
+        </thead>
+
+        <tfoot>
+        <tr>
+            <th>GAMEID</th>
+            <th>USERGAME</th>
+            <th>HAND</th>
+        </tr>
+        </tfoot>
+
+        <tbody>
+        <tr>
+            <td>${GAMEID1}</td>
+            <td>${UserName1}</td>
+            <td>${Hand1}</td>
+
+        </tr>
+        <tr>
+            <td>${GAMEID2}</td>
+            <td>${UserName2}</td>
+            <td>${Hand2}</td>
+
+        </tr>
+        <tr>
+            <td>${GAMEID3}</td>
+            <td>${UserName3}</td>
+            <td>${Hand3}</td>
+        </tr>
+        <tr>
+            <td>${GAMEID4}</td>
+            <td>${UserName4}</td>
+            <td>${Hand4}</td>
+        </tr>
+        <tr>
+            <td>${GAMEID5}</td>
+            <td>${UserName5}</td>
+            <td>${Hand5}</td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
+
+    <a href="/Logout">Logout</a>
+
+</@layout.myLayout>

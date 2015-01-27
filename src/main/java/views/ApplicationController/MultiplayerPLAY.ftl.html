@@ -1,0 +1,17 @@
+<#import "../layout/defaultLayout.ftl.html" as layout>
+    <@layout.myLayout "Home page">
+
+    <script type="text/javascript"src="/assets/webjars/jquery/2.1.1/jquery.js"></script>
+    <script type="text/javascript" src="/assets/js/Myscript1.js"></script>
+
+    <ul class="nav nav-tabs">
+        <li class="nav nav-tabs"><a href="/Game">Single Player</a></li>
+        <li><a href="/Multiplayer">Multi-Player</a></li>
+        <li><a href="/History">History</a></li>
+    </ul>
+
+
+<div>
+    <#noescape>${PlayGame}</#noescape>
+</div>
+</@layout.myLayout>
