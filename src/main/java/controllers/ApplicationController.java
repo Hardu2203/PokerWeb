@@ -25,6 +25,7 @@ import ninja.Result;
 import ninja.Results;
 
 import com.google.inject.Singleton;
+import ninja.params.PathParam;
 import ninja.session.Session;
 import services.LoginService;
 import services.PokerService;
@@ -35,10 +36,7 @@ import javax.persistence.EntityManager;
 import java.security.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 @Singleton
 public class ApplicationController {
@@ -335,7 +333,7 @@ public class ApplicationController {
 
 
 
-        if (auth.LoginTheUser(Username,Password)) {
+        if (auth.LoginTheUser(Username, Password)) {
 //
             Ses.put("username", Username);
             pok.GenerateDeck();
@@ -408,6 +406,7 @@ public class ApplicationController {
         //session.put("useename",Username)
         if (auth.RegisterTheUser(Username, Password)) {
             Ses.put("username", Username);
+            pok.GenerateDeck();
             result.render("Name", pokerService.getname());
 
 
@@ -638,6 +637,7 @@ public class ApplicationController {
         List<Game> GameList = db.getCreated();
 
         String html ="";
+        html += "<form  method='post'>";
         html += "<h2> Available Games </h2> <table>";
 
         for(Game g : GameList)
@@ -645,10 +645,10 @@ public class ApplicationController {
             if(g.getHostName().compareTo(SesUsername) != 0)
             {
 
-                html += "<tr><td><a href='/GameLobby";
+                html += "<tr><td><a href='/GameLobby/";
                 html += g.getGamename();
-                html+= "/";
-                html += SesUsername;
+
+
                 html += "'>join game</a></td></td>";
                 html += g.getGamename();
                 html += "</td></td>";
@@ -658,6 +658,7 @@ public class ApplicationController {
         }
 
         html += "</table>";
+        html += "</form>";
 
         result.render("games",html);
 
@@ -667,6 +668,53 @@ public class ApplicationController {
 
 
     }
+    Map<String, List <String>> m1 = new HashMap();
+    String html;
+    boolean changed = false;
+
+
+    public Result JoinGameLobby(@PathParam("gamename") String GameName,Context Con)
+    {
+        boolean changed = true;
+        Session s = Con.getSession();
+        String SesUsername = s.get("username");
+
+        List<String> Usernames = new ArrayList<>();
+               // m1.get(GameName);
+
+
+
+        if (m1.get(GameName) != null)
+        {
+            Usernames = m1.get(GameName);
+        }
+
+
+
+
+        Usernames.add(SesUsername);
+        m1.put(GameName, Usernames);
+        html ="";
+
+        html ="<h1> Players </h1>";
+
+        for(String Name : Usernames)
+        {
+            html += "<h2>" + Name +"</h2>";
+
+
+        }
+
+        return Results.redirect("/GameLobby");
+
+
+
+
+
+
+    }
+
+
 
     public Result GameLobby(Context Con)
     {
@@ -675,14 +723,41 @@ public class ApplicationController {
         String SesUsername = s.get("username");
 
 
+
         Result result = Results.html();
         String GameName = Con.getParameter("GameName");
-        Game g = new Game();
-        g.setgamename("GameName");
-        g.setTimestamp(new Date());
-        g.SetHostName(SesUsername);
-        g.SetStatus("Created");
-        postIndexGame(g);
+
+        if (changed ==false) {
+            Game g = new Game();
+            g.setgamename(GameName);
+            g.setTimestamp(new Date());
+            g.SetHostName(SesUsername);
+            g.SetStatus("Created");
+            postIndexGame(g);
+
+
+            List<String> Usernames = new ArrayList<>();
+
+            Usernames.add(SesUsername);
+            m1.put(GameName, Usernames);
+
+
+
+            html ="";
+
+            html ="<h1> Players </h1>";
+
+            for(String Name : Usernames)
+            {
+                html += "<h2>" + Name +"</h2>";
+
+
+            }
+
+
+
+        }
+        result.render("Members",html);
 
 
 
